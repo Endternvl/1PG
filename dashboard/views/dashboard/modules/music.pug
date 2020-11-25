@@ -1,5 +1,51 @@
 section#musicModule.module.container.px-5
   .jumbotron.bg-transparent.pb-0
     h1.display-4.text-center Music
-  .form-group.mt-5
-    .row
+  .mt-5
+    .card.bg-transparent.shadow.p-3
+      .card-header.bg-transparent.row
+        .col
+          h5 Player
+          .media
+            img.float-left.mr-2(src=q.length > 0 ? q[0].thumbnail : 'https://cdn.pixabay.com/photo/2017/07/10/23/43/question-mark-2492009_960_720.jpg')
+            .media-body.ml-2.mt-3
+              if q.length > 0
+                h2 #{q[0].title}
+                p.lead #{q[0].author}
+              else
+                h2 Nothing
+                p.lead Nobody
+        .col.mt-5
+          .controls.row
+            .col-3
+            .col-6.buttons
+              button#toggle.btn.text-gradient #[i.fas.fa-play]
+              button#stop.btn.text-gradient #[i.fas.fa-square]
+              button#skip.btn.text-gradient #[i.fas.fa-forward]
+              button#shuffle.btn.text-gradient #[i.fas.fa-random]
+            .col-3.volume
+              i.fas.fa-volume-up.text-gradient
+              input.form-control(type='range')
+          div
+            input.form-control(type='range')
+            .position
+              span.current 00:00 #[span.text-muted /] #[span.duration.text-muted 00:00]
+          
+      .card-body
+        h5 Queue
+        .q-control.mb-3
+          label Search
+            input.form-control
+          button.ml-2.mb-1.btn.btn-gradient +
+        each track in q
+          .media.list
+            img.mr-3(src=track.thumbnail)
+            .media-body
+              .float-left
+                h5.mt-0 #{track.title}
+                p.lead #{track.author}
+              .float-right
+                span.text-muted #{track.duration}
+                button.remove.btn.text-danger x
+        else
+          p No tracks here...
