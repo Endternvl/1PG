@@ -4,9 +4,11 @@ const express = require('express');
 const methodOverride = require('method-override');
 const middleware = require('./modules/middleware');
 const rateLimit = require('./modules/rate-limiter');
+const { sendError } = require('./modules/api-utils');
 
 const authRoutes = require('./routes/auth-routes');
 const dashboardRoutes = require('./routes/dashboard-routes');
+const musicRoutes = require('./routes/music-routes');
 const rootRoutes = require('./routes/root-routes');
 
 const app = express();
@@ -21,6 +23,17 @@ app.use(cookies.express('a', 'b', 'c'));
 
 app.use(express.static(`${__dirname}/assets`));
 app.locals.basedir = `${__dirname}/assets`;
+
+app.use('/api/guilds/:id/music',
+  middleware.updateUser,
+  middleware.validateUser,
+  middleware.updateGuilds,
+  middleware.validateGuild,
+  middleware.updateMusicPlayer,
+  musicRoutes
+);
+app.all('/api', (req, res) => res.json({ hello: 'earth' }));
+app.all('/api/*', (req, res) => sendError(res, { code: 404, message: 'Not found.' }));
 
 app.use('/',
   middleware.updateUser, rootRoutes,
